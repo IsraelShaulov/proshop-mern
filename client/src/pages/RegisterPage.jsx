@@ -3,7 +3,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col, Spinner } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRegisterMutation } from '../slices/usersApiSlice';
+import {
+  useRegisterMutation,
+  useGetUserProfileQuery,
+} from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
@@ -15,6 +18,9 @@ const RegisterPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { data: profileUser, refetch: refetchUserProfile } =
+    useGetUserProfileQuery();
 
   const [register, { isLoading }] = useRegisterMutation();
   const { userInfo } = useSelector((store) => store.auth);
@@ -39,6 +45,7 @@ const RegisterPage = () => {
       try {
         const res = await register({ name, email, password }).unwrap();
         dispatch(setCredentials({ ...res }));
+        refetchUserProfile();
         navigate(redirect);
       } catch (err) {
         toast.error(err?.data?.message || err.error);

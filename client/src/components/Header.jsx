@@ -8,10 +8,11 @@ import { logout } from '../slices/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { resetCart } from '../slices/cartSlice';
 import { useGetUserProfileQuery } from '../slices/usersApiSlice';
-import Loader from './Loader';
+import Spinner from 'react-bootstrap/Spinner';
 
 const Header = () => {
-  const { data: userProfile } = useGetUserProfileQuery();
+  const { data: userProfile, isLoading: profileLoading } =
+    useGetUserProfileQuery();
 
   const { cartItems } = useSelector((store) => store.cart);
   const { userInfo } = useSelector((store) => store.auth);
@@ -19,8 +20,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [logoutApiCall, { isLoading: profileLoading }] =
-    useLogoutApiCallMutation();
+  const [logoutApiCall] = useLogoutApiCallMutation();
 
   const logoutHandler = async () => {
     try {
@@ -78,7 +78,7 @@ const Header = () => {
               )}
               {/* admin dropdown */}
               {profileLoading ? (
-                <Loader />
+                <Spinner animation='border' variant='primary' />
               ) : userInfo && userProfile && userProfile?.isAdmin ? (
                 <NavDropdown title='Admin' id='adminmenu'>
                   <LinkContainer to='/admin/productlist'>

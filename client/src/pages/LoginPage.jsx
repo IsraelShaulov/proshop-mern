@@ -3,7 +3,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col, Spinner } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLoginMutation } from '../slices/usersApiSlice';
+import {
+  useGetUserProfileQuery,
+  useLoginMutation,
+} from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import Loader from '../components/Loader';
 import { toast } from 'react-toastify';
@@ -13,6 +16,9 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { data: profileUser, refetch: refetchUserProfile } =
+    useGetUserProfileQuery();
 
   const [login, { isLoading }] = useLoginMutation();
   const { userInfo } = useSelector((store) => store.auth);
@@ -33,6 +39,7 @@ const LoginPage = () => {
     try {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res }));
+      refetchUserProfile();
       navigate(redirect);
     } catch (err) {
       toast.error(err?.data?.message || err.error);
