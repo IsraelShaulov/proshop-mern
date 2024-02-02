@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Table, Button, Row, Col } from 'react-bootstrap';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Message from '../../components/Message';
@@ -10,9 +10,13 @@ import {
 } from '../../slices/productsApiSlice';
 import { LinkContainer } from 'react-router-bootstrap';
 import { toast } from 'react-toastify';
+import Paginate from '../../components/Paginate';
 
 const ProductListPage = () => {
-  const { data: products, isLoading, error, refetch } = useGetProductsQuery();
+  const { pageNumber } = useParams();
+  const { data, isLoading, error, refetch } = useGetProductsQuery({
+    pageNumber,
+  });
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
 
@@ -77,7 +81,7 @@ const ProductListPage = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => {
+              {data.products.map((product) => {
                 return (
                   <tr key={product._id}>
                     <td>{product._id}</td>
@@ -86,11 +90,11 @@ const ProductListPage = () => {
                     <td>{product.category}</td>
                     <td>{product.brand}</td>
                     <td>
-                      <LinkContainer to={`/admin/product/${product._id}/edit`}>
+                      <Link to={`/admin/product/${product._id}/edit`}>
                         <Button variant='light' className='btn-sm mx-2'>
                           <FaEdit />
                         </Button>
-                      </LinkContainer>
+                      </Link>
                       <Button
                         variant='danger'
                         className='btn-sm'
@@ -104,6 +108,11 @@ const ProductListPage = () => {
               })}
             </tbody>
           </Table>
+          <Paginate
+            numOfPages={data.numOfPages}
+            requestedPage={data.requestedPage}
+            isAdmin={true}
+          />
         </>
       )}
     </>

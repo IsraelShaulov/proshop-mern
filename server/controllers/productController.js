@@ -6,9 +6,33 @@ import { existsSync } from 'fs';
 // @desc Fetch all products
 // @route GET /api/v1/products
 // @access Public
+// Pagination
 export const getAllProducts = async (req, res) => {
-  const allProducts = await Product.find({});
-  res.status(200).json(allProducts);
+  const pageSize = 8;
+  const page = Number(req.query.pageNumber) || 1;
+
+  // Search functionality
+  const keyword = req.query.keyword
+    ? {
+        $or: [
+          { name: { $regex: req.query.keyword, $options: 'i' } },
+          { brand: { $regex: req.query.keyword, $options: 'i' } },
+          { description: { $regex: req.query.keyword, $options: 'i' } },
+        ],
+      }
+    : {};
+
+  const searchedProducts = await Product.countDocuments({ ...keyword });
+
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  res.status(200).json({
+    products,
+    requestedPage: page,
+    numOfPages: Math.ceil(searchedProducts / pageSize),
+  });
 };
 
 // @desc Fetch single product
@@ -78,7 +102,6 @@ export const updateProduct = async (req, res) => {
 // @desc Delete a product
 // @route DELETE /api/v1/products/:id
 // @access Private/Admin
-
 export const deleteProduct = async (req, res) => {
   const { id } = req.params;
 
@@ -98,4 +121,54 @@ export const deleteProduct = async (req, res) => {
 
   await Product.deleteOne({ _id: product._id });
   res.status(200).json({ message: 'Product deleted' });
+};
+
+// @desc Create a new review
+// @route POST /api/v1/products/:id/reviews
+// @access Private
+export const createProductReview = async (req, res) => {
+  const { rating, comment } = req.body;
+  const { id } = req.params;
+
+  const product = await Product.findById(id);
+  if (!product) {
+    res.status(404);
+    throw new Error('Product not found');
+  }
+
+  // user can only send review one time for each product
+  const alreadyReviewed = product.reviews.find(
+    (review) => review.user.toString() === req.user._id.toString()
+  );
+
+  if (alreadyReviewed) {
+    res.status(400);
+    throw new Error('Product already reviewed');
+  }
+
+  const review = {
+    name: req.user.name,
+    rating: Number(rating),
+    comment: comment,
+    user: req.user._id,
+  };
+
+  product.reviews.push(review);
+
+  product.numReviews = product.reviews.length;
+
+  product.rating =
+    product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+    product.reviews.length;
+
+  await product.save();
+  res.status(201).json({ message: 'Review added' });
+};
+
+// @desc Get top rated products for carousel feature
+// @route GET /api/v1/products/top
+// @access Public
+export const getTopProducts = async (req, res) => {
+  const topProducts = await Product.find({}).sort({ rating: -1 }).limit(3);
+  res.status(200).json(topProducts);
 };

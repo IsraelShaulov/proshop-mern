@@ -32,11 +32,15 @@ import {
 import PrivateRoute from './components/PrivateRoute.jsx';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import AdminRoute from './components/AdminRoute.jsx';
+import { HelmetProvider } from 'react-helmet-async';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
       <Route index={true} path='/' element={<HomePage />} />
+      <Route path='/page/:pageNumber' element={<HomePage />} />
+      <Route path='/search/:keyword' element={<HomePage />} />
+      <Route path='/search/:keyword/page/:pageNumber' element={<HomePage />} />
       <Route path='/product/:id' element={<ProductPage />} />
       <Route path='/cart' element={<CartPage />} />
       <Route path='/login' element={<LoginPage />} />
@@ -53,6 +57,10 @@ const router = createBrowserRouter(
       <Route path='' element={<AdminRoute />}>
         <Route path='/admin/orderlist' element={<OrderListPage />} />
         <Route path='/admin/productlist' element={<ProductListPage />} />
+        <Route
+          path='/admin/productlist/:pageNumber'
+          element={<ProductListPage />}
+        />
         <Route path='/admin/product/:id/edit' element={<ProductEditPage />} />
         <Route path='/admin/userlist' element={<UserListPage />} />
         <Route path='/admin/user/:id/edit' element={<UserEditPage />} />
@@ -63,10 +71,12 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <PayPalScriptProvider deferLoading={true}>
-        <RouterProvider router={router} />
-      </PayPalScriptProvider>
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        <PayPalScriptProvider deferLoading={true}>
+          <RouterProvider router={router} />
+        </PayPalScriptProvider>
+      </Provider>
+    </HelmetProvider>
   </React.StrictMode>
 );

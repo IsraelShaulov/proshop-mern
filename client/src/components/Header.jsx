@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { resetCart } from '../slices/cartSlice';
 import { useGetUserProfileQuery } from '../slices/usersApiSlice';
 import Spinner from 'react-bootstrap/Spinner';
+import SearchBox from './SearchBox';
 
 const Header = () => {
   const { data: userProfile, isLoading: profileLoading } =
@@ -48,6 +49,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
+              <SearchBox />
               <LinkContainer to='/cart'>
                 <Nav.Link>
                   <FaShoppingCart />
