@@ -37,7 +37,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/upload', uploadRouter);
 
-app.get('/api/v1/config/paypal', (req, res) => {
+app.get('/api/config/paypal', (req, res) => {
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID });
 });
 

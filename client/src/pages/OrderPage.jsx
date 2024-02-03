@@ -48,7 +48,7 @@ const OrderPage = () => {
         paypalDispatch({
           type: 'resetOptions',
           value: {
-            clientId: paypal.clientId,
+            'client-id': paypal.clientId,
             currency: 'USD',
           },
         });
