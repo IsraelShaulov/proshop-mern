@@ -26,7 +26,13 @@ app.use(express.urlencoded({ extended: true }));
 // Cookie parser middleware
 app.use(cookieParser());
 
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      'script-src': ["'self'", 'https://www.paypal.com'],
+    },
+  })
+);
 app.use(mongoSanitize());
 app.set('trust proxy', 1);
 
