@@ -24,10 +24,6 @@ app.use(cookieParser());
 
 const port = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
-
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/orders', orderRouter);
@@ -38,7 +34,22 @@ app.get('/api/v1/config/paypal', (req, res) => {
 });
 
 const __dirname = path.resolve();
+console.log(__dirname);
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
+if (process.env.NODE_ENV === 'production') {
+  // set static folder
+  app.use(express.static(path.join(__dirname, '/client/dist')));
+
+  // any route that is not backend api will be redirected to index.html
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running...');
+  });
+}
 
 app.use(notFound);
 app.use(errorHandler);

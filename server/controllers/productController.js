@@ -8,7 +8,7 @@ import { existsSync } from 'fs';
 // @access Public
 // Pagination
 export const getAllProducts = async (req, res) => {
-  const pageSize = 8;
+  const pageSize = process.env.PAGINATION_LIMIT;
   const page = Number(req.query.pageNumber) || 1;
 
   // Search functionality
