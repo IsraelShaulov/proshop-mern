@@ -22,7 +22,7 @@ import {
   ProfilePage,
   RegisterPage,
   ShippingPage,
-  // CartPage,
+  CartPage,
   OrderListPage,
   ProductListPage,
   ProductEditPage,
@@ -33,7 +33,6 @@ import PrivateRoute from './components/PrivateRoute.jsx';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import AdminRoute from './components/AdminRoute.jsx';
 import { HelmetProvider } from 'react-helmet-async';
-import CartPage from './pages/CartPage.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
