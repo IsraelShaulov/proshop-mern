@@ -13,7 +13,7 @@ import orderRouter from './routes/orderRouter.js';
 import uploadRouter from './routes/uploadRouter.js';
 
 // security packages
-import helmet from 'helmet';
+// import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 
 connectDB();
@@ -26,15 +26,15 @@ app.use(express.urlencoded({ extended: true }));
 // Cookie parser middleware
 app.use(cookieParser());
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      'script-src': ["'self'", 'https://www.paypal.com'],
-      'img-src': ["'self'", 'https://www.paypalobjects.com'],
-      'connect-src': ["'self'", 'https://www.sandbox.paypal.com'],
-    },
-  })
-);
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     directives: {
+//       'script-src': ["'self'", 'https://www.paypal.com'],
+//       'img-src': ["'self'", 'https://www.paypalobjects.com'],
+//       'connect-src': ["'self'", 'https://www.sandbox.paypal.com'],
+//     },
+//   })
+// );
 
 app.use(mongoSanitize());
 app.set('trust proxy', 1);
