@@ -30,9 +30,12 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       'script-src': ["'self'", 'https://www.paypal.com'],
+      'img-src': ["'self'", 'https://www.paypalobjects.com'],
+      'connect-src': ["'self'", 'https://www.sandbox.paypal.com'],
     },
   })
 );
+
 app.use(mongoSanitize());
 app.set('trust proxy', 1);
 
