@@ -12,6 +12,10 @@ import userRouter from './routes/userRouter.js';
 import orderRouter from './routes/orderRouter.js';
 import uploadRouter from './routes/uploadRouter.js';
 
+// security packages
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+
 connectDB();
 const app = express();
 
@@ -21,6 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Cookie parser middleware
 app.use(cookieParser());
+
+app.use(helmet());
+app.use(mongoSanitize());
+app.set('trust proxy', 1);
 
 const port = process.env.PORT || 3000;
 
