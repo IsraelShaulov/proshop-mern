@@ -7,7 +7,7 @@ import ProductPage from './ProductPage';
 import ProfilePage from './ProfilePage';
 import RegisterPage from './RegisterPage';
 import ShippingPage from './ShippingPage';
-import CartPage from './cartPage';
+// import CartPage from './cartPage';
 import OrderListPage from './Admin/OrderListPage';
 import ProductListPage from './Admin/ProductListPage';
 import ProductEditPage from './Admin/ProductEditPage';
@@ -24,7 +24,7 @@ export {
   ProfilePage,
   RegisterPage,
   ShippingPage,
-  CartPage,
+  // CartPage,
   OrderListPage,
   ProductListPage,
   ProductEditPage,
