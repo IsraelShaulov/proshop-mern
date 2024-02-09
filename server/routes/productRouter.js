@@ -14,13 +14,31 @@ import {
   authenticateUser,
   adminMiddleware,
 } from '../middleware/authMiddleware.js';
+import checkObjectId from '../middleware/checkObjectId.js';
 
 router.get('/', getAllProducts);
 router.get('/top', getTopProducts);
 router.post('/', authenticateUser, adminMiddleware, createProduct);
-router.patch('/:id', authenticateUser, adminMiddleware, updateProduct);
-router.delete('/:id', authenticateUser, adminMiddleware, deleteProduct);
-router.get('/:id', getSingleProduct);
-router.post('/:id/reviews', authenticateUser, createProductReview);
+router.patch(
+  '/:id',
+  authenticateUser,
+  checkObjectId,
+  adminMiddleware,
+  updateProduct
+);
+router.delete(
+  '/:id',
+  authenticateUser,
+  checkObjectId,
+  adminMiddleware,
+  deleteProduct
+);
+router.get('/:id', checkObjectId, getSingleProduct);
+router.post(
+  '/:id/reviews',
+  authenticateUser,
+  checkObjectId,
+  createProductReview
+);
 
 export default router;
